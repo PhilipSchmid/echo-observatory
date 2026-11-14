@@ -120,6 +120,8 @@ func TestReleaseWaitsForImagesAndProtectsStableTags(t *testing.T) {
 	assert.Equal(t, "checks", cfg.GetString("jobs.image-smoke.needs"))
 	assert.Equal(t, "image-smoke", cfg.GetString("jobs.docker-release.needs"))
 	assert.Equal(t, "docker-release", cfg.GetString("jobs.release.needs"), "publish the release only after its images and SBOM exist")
+	assert.ElementsMatch(t, []string{"docker-release", "release"}, cfg.GetStringSlice("jobs.deploy.needs"), "deploy only after publication succeeds")
+	assert.Contains(t, cfg.GetString("jobs.deploy.if"), "github.repository == 'PhilipSchmid/echo-observatory'", "forks must not deploy the public demo")
 	assert.Contains(t, cfg.GetString("env.image_name"), "'philipschmid/echo-app' || 'philipschmid/echo-observatory'")
 	var steps []struct {
 		Uses string

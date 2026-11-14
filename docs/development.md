@@ -195,6 +195,34 @@ most recent stable release.
 Starting with 2.0.0, releases use `ghcr.io/philipschmid/echo-observatory`.
 Legacy 1.x tags retain `ghcr.io/philipschmid/echo-app`.
 
+Stable releases from 2.0 onward in `PhilipSchmid/echo-observatory` deploy to the
+existing Fly.io app after both the image and GitHub release are published. The
+deployment uses the image digest, preserves the live Fly configuration, and checks
+every machine and the version at
+`https://echo.container.education/ui/`. Prereleases and legacy releases do not deploy.
+Automatic deployment is disabled in forks. The repository secret `FLY_API_TOKEN`
+must contain a deploy token scoped to `echo-observatory`; renew it before its
+expiry. The app's VM configuration must allow its non-root process to bind UDP
+port 443 for HTTP/3; Fly requires the
+[same internal and external UDP port](https://fly.io/docs/networking/udp-and-tcp/).
+This is persisted in Fly's app configuration:
+
+```toml
+[[vm]]
+kernel_args = ['sysctl.net.ipv4.ip_unprivileged_port_start=443']
+```
+
+Retain this setting alongside the existing VM size fields. It replaces the old
+Fly-specific image's root startup wrapper; the published image runs directly as
+UID 65532. The deployment script reads the live configuration and refuses to
+replace any image if this setting is absent or changed. This check requires
+Python 3.11+ for its standard-library TOML parser.
+
+Maintainers can deploy an already published image by setting `FLY_API_TOKEN` and
+running
+`bash scripts/deploy-fly.sh v2.1.2 sha256:<published-image-digest>`.
+Run `node --test tests/deploy-fly.test.mjs` to check deployment failure handling.
+
 ## Contributing
 
 Keep changes focused and include a regression test for new behavior or bug fixes.

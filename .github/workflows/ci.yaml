@@ -79,6 +79,9 @@ jobs:
       - name: Test browser client
         run: make test-ui
 
+      - name: Test Fly deployment checks
+        run: node --test tests/deploy-fly.test.mjs
+
       - name: Validate Grafana dashboard and PromQL
         run: make test-grafana test-grafana-promql
 
