@@ -147,9 +147,9 @@ opt-in. All bind ports are configurable. Existing 1.x image paths are unchanged.
 
 ## Version 2
 
-Use [v2.1.1](https://github.com/PhilipSchmid/echo-observatory/releases/tag/v2.1.1)
-for a stable release. Pin `ghcr.io/philipschmid/echo-observatory:2.1.1` for
-repeatable container deployments.
+See the [latest stable release](https://github.com/PhilipSchmid/echo-observatory/releases/latest)
+for downloads and the matching container image tag. For repeatable container
+deployments, pin the image by digest.
 
 Version 2.1 adds the [Grafana operations dashboard](dashboards/README.md),
 certificate validity metrics, and rate-limit headroom and usage metrics.
